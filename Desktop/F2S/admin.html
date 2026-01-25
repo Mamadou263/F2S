@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration Actualités - MD-TECH</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .admin-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+        
+        .form-section,
+        .list-section {
+            background: #121835;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+        }
+        
+        .form-section h2,
+        .list-section h2 {
+            margin-bottom: 1.5rem;
+            color: #00d9ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #a0aec0;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: #070b1f;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 10px;
+            color: #ffffff;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00d9ff;
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.2);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .image-preview {
+            margin-top: 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .image-preview img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
+            color: #ffffff;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 217, 255, 0.6);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #00d9ff;
+            color: #00d9ff;
+        }
+        
+        .btn-secondary:hover {
+            background: #00d9ff;
+            color: #0a0e27;
+        }
+        
+        .btn-danger {
+            background: #ff4444;
+            color: #ffffff;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-danger:hover {
+            background: #cc0000;
+        }
+        
+        .actualite-item {
+            background: #070b1f;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .actualite-item:hover {
+            border-color: #00d9ff;
+            transform: translateY(-3px);
+        }
+        
+        .actualite-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        
+        .actualite-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .actualite-date {
+            color: #00d9ff;
+            font-size: 0.9rem;
+        }
+        
+        .actualite-description {
+            color: #a0aec0;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .actualite-image-thumb {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .actualite-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #a0aec0;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: #00d9ff;
+            margin-bottom: 1rem;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .alert.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .alert-success {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+        }
+        
+        .alert-error {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            color: #ff4444;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #00d9ff;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+        
+        @media (max-width: 968px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> Retour au portfolio
+        </a>
+
+        <div class="admin-header">
+            <h1><i class="fas fa-newspaper"></i> Administration des Actualités</h1>
+            <p>Gérez facilement vos actualités sans toucher au code</p>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="admin-grid">
+            <div class="form-section">
+                <h2><i class="fas fa-plus-circle"></i> Ajouter une actualité</h2>
+                <form id="actualiteForm">
+                    <div class="form-group">
+                        <label for="title">Titre *</label>
+                        <input type="text" id="title" required placeholder="Ex: Lancement d'un nouveau projet">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description *</label>
+                        <textarea id="description" required placeholder="Décrivez votre actualité..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Date *</label>
+                        <input type="date" id="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="imageUrl">URL de l'image *</label>
+                        <input type="url" id="imageUrl" required placeholder="https://exemple.com/image.jpg">
+                        <small style="color: #a0aec0; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Utilisez des images d'Unsplash, Pexels ou votre propre hébergement
+                        </small>
+                    </div>
+
+                    <div class="image-preview" id="imagePreview">
+                        <img id="previewImg" src="" alt="Aperçu">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Ajouter l'actualité
+                    </button>
+                </form>
+            </div>
+
+            <div class="list-section">
+                <h2><i class="fas fa-list"></i> Actualités existantes</h2>
+                <div id="actualitesList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>
